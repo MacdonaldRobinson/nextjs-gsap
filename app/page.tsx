@@ -1,103 +1,365 @@
-import Image from "next/image";
+"use client";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollSmoother, ScrollTrigger } from "gsap/all";
+import { JSX, RefObject, useContext, useEffect, useRef, useState } from "react";
+import GsapContext from "./contexts/GsapContext";
+
+gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
+
+type gsapFromTo = {
+    from: gsap.TweenVars;
+    to: gsap.TweenVars;
+};
+
+type TBlock = React.HTMLAttributes<HTMLDivElement> & {
+    children: React.ReactNode;
+    gsapFromTo?: gsapFromTo;
+};
+
+type TStep = React.HTMLAttributes<HTMLDivElement> & {
+    children: React.ReactNode;
+};
+
+type TSectionContent = React.HTMLAttributes<HTMLDivElement> & {
+    children: React.ReactElement<TStep> | React.ReactElement<TStep>[];
+};
+
+type TSection = React.HTMLAttributes<HTMLDivElement> & {
+    children?:
+        | React.ReactElement<TSectionContent>
+        | [React.ReactElement<TSectionBg>, React.ReactElement<TSectionContent>];
+};
+
+type TSections = React.HTMLAttributes<HTMLDivElement> & {
+    children: React.ReactElement<TSection> | React.ReactElement<TSection>[];
+    ref: React.Ref<HTMLDivElement>;
+};
+
+type TSectionBg =
+    | (React.HTMLAttributes<HTMLDivElement> & {
+          type: "image";
+          src: string;
+      })
+    | (React.VideoHTMLAttributes<HTMLVideoElement> & {
+          type: "video";
+          src: string;
+      })
+    | (React.HTMLAttributes<HTMLDivElement> & {
+          type: "className";
+          src?: never;
+      });
+
+const Step = ({ children, className, ...props }: TStep) => {
+    const stepRef = useRef<HTMLDivElement>(null);
+    return (
+        <div
+            ref={stepRef}
+            className={`step border-2 border-red-200 relative z-10 h-full justify-around w-full ${className}`}
+            {...props}
+        >
+            {children}
+        </div>
+    );
+};
+
+const SectionBg = (props: TSectionBg) => {
+    const { type } = props;
+
+    if (type === "image") {
+        const { src, className = "", ...rest } = props; // rest contains only valid div/html attributes
+        return (
+            <div className="sectionBg absolute z-0 w-full h-full">
+                <img
+                    src={src}
+                    className={`h-full w-full object-cover ${className}`}
+                    {...rest}
+                />
+            </div>
+        );
+    }
+
+    if (type === "video") {
+        const { src, className = "", ...rest } = props; // rest contains only VideoHTMLAttributes
+        return (
+            <div className="sectionBg absolute z-0 w-full h-full">
+                <video
+                    src={src}
+                    className={`h-full w-full object-cover ${className}`}
+                    {...rest}
+                    muted
+                    autoPlay
+                    loop
+                />
+            </div>
+        );
+    }
+
+    // type === "className"
+    const { className = "", ...rest } = props; // rest contains div attributes
+    return (
+        <div className="sectionBg absolute z-0 w-full h-full">
+            <div
+                className={`h-full w-full object-cover ${className}`}
+                {...rest}
+            />
+        </div>
+    );
+};
+
+const SectionContent = ({ children, className, ...props }: TSectionContent) => {
+    return (
+        <div
+            className={`sectionContent flex flex-col relative z-10 w-full h-full ${className}`}
+            {...props}
+        >
+            {children}
+        </div>
+    );
+};
+
+const getScrollTrigger = ({
+    element,
+    overrides,
+}: {
+    element: HTMLElement;
+    overrides?: ScrollTrigger.Vars;
+}): ScrollTrigger.Vars => {
+    return {
+        trigger: element,
+        scrub: true,
+        scroller: ".sectionsWrapper",
+        invalidateOnRefresh: true,
+        start: "top bottom",
+        end: "top top",
+        ...overrides,
+    };
+};
+
+const createGsapTimelineForSection = ({
+    element,
+    overrides,
+}: {
+    element: HTMLElement;
+    overrides?: ScrollTrigger.Vars;
+}): gsap.core.Timeline => {
+    const timeline = gsap.timeline({
+        scrollTrigger: getScrollTrigger({
+            element: element,
+            overrides: {
+                start: "top top",
+                end: "bottom bottom",
+                ...overrides,
+            },
+        }),
+    });
+
+    return timeline;
+};
+
+const Block = ({ children, className, gsapFromTo, ...props }: TBlock) => {
+    const blockRef = useRef<HTMLDivElement>();
+    const gsapContext = useContext(GsapContext);
+
+    useGSAP(() => {
+        if (!blockRef.current) return;
+        if (!gsapContext || !gsapContext.timeline) return;
+
+        const scrollTrigger = getScrollTrigger({
+            element: blockRef.current as HTMLElement,
+            overrides: {
+                start: "top bottom",
+                end: "top top",
+                markers: true,
+            },
+        });
+
+        if (gsapFromTo) {
+            gsap.fromTo(blockRef.current, gsapFromTo.from, {
+                ...gsapFromTo.to,
+                scrollTrigger: scrollTrigger,
+            });
+        } else if (!gsapFromTo) {
+            gsap.fromTo(
+                blockRef.current,
+                {
+                    opacity: 0,
+                    yPercent: -30,
+                },
+                {
+                    opacity: 1,
+                    yPercent: 0,
+                    scrollTrigger: scrollTrigger,
+                }
+            );
+        }
+    }, [gsapContext]);
+
+    return (
+        <div
+            ref={blockRef}
+            className={`block border-2 h-fit ${className}`}
+            {...props}
+        >
+            {children}
+        </div>
+    );
+};
+
+const Section = ({ children, className, ...props }: TSection) => {
+    const sectionRef = useRef<HTMLDivElement>(null);
+    const [gsapTimeline, setGsapTimeline] = useState<gsap.core.Timeline | null>(
+        null
+    );
+
+    useGSAP(() => {
+        if (!sectionRef.current) return;
+
+        const shouldPin = sectionRef.current!.scrollHeight > window.innerHeight;
+
+        const timeline = createGsapTimelineForSection({
+            element: sectionRef.current,
+            overrides: {
+                end: () => "+=" + sectionRef.current!.scrollHeight,
+                pin: true, // keeps section pinned while animating
+            },
+        });
+
+        const blocks = sectionRef.current.querySelectorAll(".block");
+
+        blocks.forEach((block, index) => {
+            const x = index % 2 === 0 ? -100 : 100;
+
+            gsap.from(block, {
+                opacity: 0,
+                xPercent: x,
+            });
+        });
+        setGsapTimeline(timeline);
+    });
+    return (
+        <GsapContext.Provider value={{ timeline: gsapTimeline }}>
+            <div
+                ref={sectionRef}
+                className={`section border-2 border-blue-200 relative w-full h-[100vh] ${className}`}
+                {...props}
+            >
+                {children}
+            </div>
+        </GsapContext.Provider>
+    );
+};
+
+const Sections = ({ children, ref }: TSections) => {
+    return (
+        <div className="sections h-fit w-full" ref={ref}>
+            {children}
+        </div>
+    );
+};
+
+const PlaceHolderText = () => {
+    return (
+        <>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s, when an unknown printer took a galley of type
+            and scrambled it to make a type specimen book. It has survived not
+            only five centuries, but also the leap into electronic typesetting,
+            remaining essentially unchanged. It was popularised in the 1960s
+            with the release of Letraset sheets containing Lorem Ipsum passages,
+            and more recently with desktop publishing software like Aldus
+            PageMaker including versions of Lorem Ipsum.
+        </>
+    );
+};
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const sectionsRef = useRef<HTMLDivElement>(null);
+    useGSAP(() => {
+        if (!sectionsRef.current) return;
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        ScrollSmoother.create({
+            wrapper: ".sectionsWrapper",
+            content: sectionsRef.current,
+            smooth: 1.5,
+            effects: true,
+        });
+    });
+    return (
+        <div className="sectionsWrapper">
+            <Sections ref={sectionsRef}>
+                <Section>
+                    <SectionBg type="className" className="bg-red-200" />
+                    <SectionContent>
+                        <Step className="flex flex-col">
+                            <Block
+                                className="flex w-6/12"
+                                gsapfrom={{
+                                    opacity: 0,
+                                }}
+                            >
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12 self-end">
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                    </SectionContent>
+                </Section>
+                <Section>
+                    <SectionBg type="className" className="bg-green-200" />
+                    <SectionContent>
+                        <Step className="flex flex-col">
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12 self-end">
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                    </SectionContent>
+                </Section>
+                <Section>
+                    <SectionBg type="className" className="bg-orange-200" />
+                    <SectionContent>
+                        <Step className="flex flex-col">
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12 self-end">
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                    </SectionContent>
+                </Section>
+                <Section>
+                    <SectionBg type="className" className="bg-purple-200" />
+                    <SectionContent>
+                        <Step className="flex flex-col">
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12 self-end">
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                    </SectionContent>
+                </Section>
+                <Section>
+                    <SectionBg type="className" className="bg-gray-200" />
+                    <SectionContent>
+                        <Step className="flex flex-col">
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12 self-end">
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                    </SectionContent>
+                </Section>
+            </Sections>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
