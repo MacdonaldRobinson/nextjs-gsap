@@ -46,14 +46,18 @@ const PlaceHolderText = () => {
     return (
         <>
             Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry.
+        </>
+    );
+};
+
+const PlaceHolderText2 = () => {
+    return (
+        <>
+            Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum.
+            and scrambled it to make a type specimen book.
         </>
     );
 };
@@ -79,53 +83,17 @@ export default function Home() {
                         src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
                     />
                     <SectionContent>
-                        <Step>
-                            <Block className="flex w-6/12">
+                        <Step className="w-[100vw] h-[100vh] bg-amber-300">
+                            <Block className="flex w-[100vw] h-[100vh] absolute justify-center bg-red-300">
                                 <PlaceHolderText />
+                                <Block>
+                                    <PlaceHolderText2 />
+                                </Block>
                             </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
+                            <Block className="flex w-[100vw] h-[100vh] absolute justify-center bg-green-300">
+                                <PlaceHolderText2 />
                             </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block
-                                className="flex w-6/12 self-center"
-                                gsapFromAnimation={{
-                                    opacity: 0,
-                                    scale: 0,
-                                }}
-                                gsapToAnimations={[
-                                    {
-                                        scale: 2,
-                                        opacity: 0.5,
-                                    },
-                                ]}
-                            >
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block
-                                className="flex w-6/12 self-center"
-                                gsapFromAnimation={{
-                                    opacity: 0,
-                                    scale: 0,
-                                }}
-                                gsapToAnimations={[
-                                    {
-                                        scale: 2,
-                                        opacity: 0.5,
-                                    },
-                                ]}
-                            >
+                            <Block className="flex w-[100vw] h-[100vh] absolute justify-center bg-blue-300">
                                 <PlaceHolderText />
                             </Block>
                         </Step>
@@ -134,6 +102,17 @@ export default function Home() {
                 <Section>
                     <SectionBg type="className" className="bg-green-200" />
                     <SectionContent>
+                        <Step>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12 self-end">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
                         <Step>
                             <Block className="flex w-6/12">
                                 <PlaceHolderText />

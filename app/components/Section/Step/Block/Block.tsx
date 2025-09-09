@@ -93,17 +93,20 @@ const Block = ({
         if (!stepContext?.stepRef.current) return;
         if (!stepContext.gsapTimeline) return;
 
-        const blockTimeline = runImmediatGsapAnimations();
+        const blockTimeline = gsap.timeline(); //runImmediatGsapAnimations();
 
-        sectionContext.gsapTimeline?.fromTo(
+        blockTimeline.fromTo(
             blockRef.current,
             {
                 opacity: 0,
+                yPercent: 100,
             },
             {
                 opacity: 1,
+                yPercent: 0,
             }
         );
+        blockTimeline.to(blockRef.current, { opacity: 1, duration: 5 }); // hold
 
         stepContext.gsapTimeline.add(blockTimeline);
     }, [sectionContext?.gsapTimeline]);
@@ -111,7 +114,7 @@ const Block = ({
     return (
         <div
             ref={blockRef}
-            className={`block border-2 h-fit ${className}`}
+            className={`block border-2 ${className}`}
             {...props}
         >
             {children}

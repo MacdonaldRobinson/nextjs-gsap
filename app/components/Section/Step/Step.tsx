@@ -25,7 +25,7 @@ const Step = ({ children, className, ...props }: TStep) => {
 
         setGsapTimeline(timeline);
 
-        sectionContext.gsapTimeline.add(timeline);
+        sectionContext.gsapTimeline.add(timeline, "+=1");
     }, [sectionContext?.gsapTimeline]);
 
     return (
