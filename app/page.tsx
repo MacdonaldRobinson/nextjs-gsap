@@ -1,139 +1,22 @@
 "use client";
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
-import { JSX, RefObject, useContext, useEffect, useRef, useState } from "react";
-import GsapContext from "./contexts/GsapContext";
-import SectionContext from "./contexts/SectionContext";
-import StepContext from "./contexts/StepContext";
+import { useRef } from "react";
+import Section, { TSection } from "./components/Section/Section";
+import SectionBg from "./components/Section/SectionBg";
+import SectionContent from "./components/Section/SectionContent";
+import Block from "./components/Section/Step/Block/Block";
+import Step from "./components/Section/Step/Step";
+import gsap from "gsap";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
-
-type TBlock = React.HTMLAttributes<HTMLDivElement> & {
-    children: React.ReactNode;
-    gsapFromAnimation?: gsap.TweenVars;
-    gsapToAnimations?: gsap.TweenVars[];
-    enableGsapAnimations?: boolean;
-    runToAnimationsImmediatly?: boolean;
-};
-
-type TStep = React.HTMLAttributes<HTMLDivElement> & {
-    children: React.ReactNode;
-};
-
-type TSectionContent = React.HTMLAttributes<HTMLDivElement> & {
-    children: React.ReactElement<TStep> | React.ReactElement<TStep>[];
-};
-
-type TSection = React.HTMLAttributes<HTMLDivElement> & {
-    pinSection?: boolean;
-    children?:
-        | React.ReactElement<TSectionContent>
-        | [React.ReactElement<TSectionBg>, React.ReactElement<TSectionContent>];
-};
 
 type TSections = React.HTMLAttributes<HTMLDivElement> & {
     children: React.ReactElement<TSection> | React.ReactElement<TSection>[];
     ref: React.Ref<HTMLDivElement>;
 };
 
-type TSectionBg =
-    | (React.HTMLAttributes<HTMLDivElement> & {
-          type: "image";
-          src: string;
-      })
-    | (React.VideoHTMLAttributes<HTMLVideoElement> & {
-          type: "video";
-          src: string;
-      })
-    | (React.HTMLAttributes<HTMLDivElement> & {
-          type: "className";
-          src?: never;
-      });
-
-const Step = ({ children, className, ...props }: TStep) => {
-    const stepRef = useRef<HTMLDivElement>(null);
-    const [gsapTimeline, setGsapTimeline] = useState<gsap.core.Timeline | null>(
-        null
-    );
-
-    useGSAP(() => {
-        const timeline = gsap.timeline();
-
-        setGsapTimeline(timeline);
-    });
-
-    return (
-        <StepContext.Provider
-            value={{ stepRef: stepRef, stepGsapTimeline: gsapTimeline }}
-        >
-            <div
-                ref={stepRef}
-                className={`step border-red-200 relative z-10 justify-around w-full flex flex-col ${className}`}
-                {...props}
-            >
-                {children}
-            </div>
-        </StepContext.Provider>
-    );
-};
-
-const SectionBg = (props: TSectionBg) => {
-    const { type } = props;
-
-    if (type === "image") {
-        const { src, className = "", ...rest } = props; // rest contains only valid div/html attributes
-        return (
-            <div className="sectionBg absolute z-0 w-full h-full">
-                <img
-                    src={src}
-                    className={`h-full w-full object-cover ${className}`}
-                    {...rest}
-                />
-            </div>
-        );
-    }
-
-    if (type === "video") {
-        const { src, className = "", ...rest } = props; // rest contains only VideoHTMLAttributes
-        return (
-            <div className="sectionBg absolute z-0 w-full h-full">
-                <video
-                    src={src}
-                    className={`h-full w-full object-cover ${className}`}
-                    {...rest}
-                    muted
-                    autoPlay
-                    loop
-                />
-            </div>
-        );
-    }
-
-    // type === "className"
-    const { className = "", ...rest } = props; // rest contains div attributes
-    return (
-        <div className="sectionBg absolute z-0 w-full h-full">
-            <div
-                className={`h-full w-full object-cover ${className}`}
-                {...rest}
-            />
-        </div>
-    );
-};
-
-const SectionContent = ({ children, className, ...props }: TSectionContent) => {
-    return (
-        <div
-            className={`sectionContent flex flex-col relative z-10 w-full h-full ${className}`}
-            {...props}
-        >
-            {children}
-        </div>
-    );
-};
-
-const getScrollTrigger = ({
+export const getScrollTrigger = ({
     element,
     overrides,
 }: {
@@ -145,182 +28,10 @@ const getScrollTrigger = ({
         scrub: true,
         scroller: ".sectionsWrapper",
         invalidateOnRefresh: true,
-        start: "top bottom",
-        end: "bottom top",
+        start: "bottom bottom",
+        end: () => "+=" + element.scrollHeight,
         ...overrides,
     };
-};
-
-const createGsapTimelineForSection = ({
-    element,
-    overrides,
-}: {
-    element: HTMLElement;
-    overrides?: ScrollTrigger.Vars;
-}): gsap.core.Timeline => {
-    const timeline = gsap.timeline({
-        scrollTrigger: getScrollTrigger({
-            element: element,
-            overrides: {
-                start: "top top",
-                end: "bottom bottom",
-                ...overrides,
-            },
-        }),
-    });
-
-    return timeline;
-};
-
-const Block = ({
-    children,
-    className,
-    gsapFromAnimation,
-    gsapToAnimations,
-    runToAnimationsImmediatly = false,
-    enableGsapAnimations = true,
-    ...props
-}: TBlock) => {
-    const blockRef = useRef<HTMLDivElement>();
-    const sectionContext = useContext(SectionContext);
-    const stepContext = useContext(StepContext);
-
-    const runImmediatGsapAnimations = () => {
-        if (!blockRef.current) return;
-        if (!sectionContext?.sectionRef.current) return;
-
-        const blockTimeline = gsap.timeline();
-
-        if (gsapFromAnimation) {
-            blockTimeline.from(blockRef.current, {
-                ...gsapFromAnimation,
-            });
-        }
-
-        if (runToAnimationsImmediatly) {
-            if (gsapToAnimations) {
-                gsapToAnimations.forEach((toAnimation) => {
-                    blockTimeline.to(blockRef.current, {
-                        ...toAnimation,
-                    });
-                });
-            }
-        }
-
-        return blockTimeline;
-    };
-
-    const bindDefaultScrollAnimations = (
-        scrollTimeline: gsap.core.Timeline
-    ) => {
-        if (!blockRef.current) return;
-        if (!sectionContext?.sectionRef.current) return;
-
-        const blockRect = blockRef.current.getBoundingClientRect();
-        const sectionRect =
-            sectionContext.sectionRef.current.getBoundingClientRect();
-
-        const isOnRight =
-            blockRect.left + blockRect.width > sectionRect.width / 2;
-
-        scrollTimeline.fromTo(
-            blockRef.current,
-            {
-                opacity: 0,
-                xPercent: isOnRight ? 100 : -100,
-                duration: 1,
-            },
-            {
-                xPercent: 0,
-                opacity: 1,
-            }
-        );
-    };
-
-    const bindScrollTimeline = (immediateTimeline: gsap.core.Timeline) => {
-        const scrollTimeline = gsap.timeline();
-        if (!scrollTimeline) return;
-
-        // default
-        if (!gsapFromAnimation && !gsapToAnimations) {
-            bindDefaultScrollAnimations(scrollTimeline);
-        }
-
-        // if (!runToAnimationsImmediatly) {
-        //     gsapToAnimations?.forEach((toAnimation) => {
-        //         scrollTimeline.to(blockRef.current, {
-        //             ...toAnimation,
-        //         });
-        //     });
-        // }
-
-        ScrollTrigger.create({
-            animation: scrollTimeline,
-            trigger: blockRef.current,
-            start: "top bottom",
-            end: "top top",
-            scrub: true,
-            markers: true,
-        });
-    };
-
-    useGSAP(() => {
-        if (!blockRef.current) return;
-        if (!sectionContext?.sectionRef.current) return;
-        if (!stepContext?.stepRef.current) return;
-
-        const immediateTimeline = runImmediatGsapAnimations();
-        immediateTimeline?.eventCallback("onComplete", () => {
-            bindScrollTimeline(immediateTimeline);
-        });
-    }, [gsapFromAnimation, sectionContext]);
-
-    return (
-        <div
-            ref={blockRef}
-            className={`block border-2 h-fit ${className}`}
-            {...props}
-        >
-            {children}
-        </div>
-    );
-};
-
-const Section = ({ children, className, ...props }: TSection) => {
-    const sectionRef = useRef<HTMLDivElement>(null);
-    const [gsapTimeline, setGsapTimeline] = useState<gsap.core.Timeline | null>(
-        null
-    );
-
-    useGSAP(() => {
-        if (!sectionRef.current) return;
-
-        const timeline = createGsapTimelineForSection({
-            element: sectionRef.current,
-            overrides: {
-                end: () => "=+" + sectionRef.current!.scrollHeight,
-                pin: false, // keeps section pinned while animating
-            },
-        });
-
-        setGsapTimeline(timeline);
-    });
-    return (
-        <SectionContext.Provider
-            value={{
-                sectionRef: sectionRef,
-                sectionGsapTimeline: gsapTimeline,
-            }}
-        >
-            <div
-                ref={sectionRef}
-                className={`section border-2 border-blue-200 relative w-full h-full ${className}`}
-                {...props}
-            >
-                {children}
-            </div>
-        </SectionContext.Provider>
-    );
 };
 
 const Sections = ({ children, ref }: TSections) => {
@@ -369,6 +80,39 @@ export default function Home() {
                     />
                     <SectionContent>
                         <Step>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block
+                                className="flex w-6/12 self-center"
+                                gsapFromAnimation={{
+                                    opacity: 0,
+                                    scale: 0,
+                                }}
+                                gsapToAnimations={[
+                                    {
+                                        scale: 2,
+                                        opacity: 0.5,
+                                    },
+                                ]}
+                            >
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
+                            <Block className="flex w-6/12">
+                                <PlaceHolderText />
+                            </Block>
                             <Block
                                 className="flex w-6/12 self-center"
                                 gsapFromAnimation={{
@@ -400,9 +144,8 @@ export default function Home() {
                             <Block className="flex w-6/12">
                                 <PlaceHolderText />
                             </Block>
-                            <Block className="flex w-6/12 self-end">
-                                <PlaceHolderText />
-                            </Block>
+                        </Step>
+                        <Step>
                             <Block className="flex w-6/12">
                                 <PlaceHolderText />
                             </Block>
@@ -410,27 +153,6 @@ export default function Home() {
                                 <PlaceHolderText />
                             </Block>
                             <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12 self-end">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12 self-end">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12 self-end">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12 self-end">
                                 <PlaceHolderText />
                             </Block>
                         </Step>
