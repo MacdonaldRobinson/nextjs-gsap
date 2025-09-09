@@ -28,15 +28,13 @@ const Block = ({
     const stepContext = useContext(StepContext);
 
     const runImmediatGsapAnimations = () => {
+        //const immediateTimeline = gsap.timeline();
         const immediateTimeline = gsap.timeline();
 
         const runFromAnimations = () => {
             if (gsapFromAnimation) {
                 immediateTimeline.from(blockRef.current, {
                     ...gsapFromAnimation,
-                    scrollTrigger: getScrollTrigger({
-                        element: blockRef.current as HTMLElement,
-                    }),
                 });
             }
         };
@@ -89,48 +87,26 @@ const Block = ({
         );
     };
 
-    const bindScrollTimeline = (
-        runOnTimeline: gsap.core.Timeline,
-        scrollTrigger: ScrollTrigger.Vars
-    ) => {
-        // make a fresh timeline that is controlled by ScrollTrigger
-        //const scrollTimeline = gsap.timeline();
-
-        if (!runOnTimeline) return;
-
-        // default
-        if (!gsapFromAnimation && !gsapToAnimations) {
-            bindDefaultScrollAnimations(runOnTimeline, scrollTrigger);
-        }
-
-        // if (!runToAnimationsImmediatly) {
-        //     gsapToAnimations?.forEach((toAnimation) => {
-        //         scrollTimeline.to(blockRef.current, {
-        //             ...toAnimation,
-        //         });
-        //     });
-        // }
-    };
-
     useGSAP(() => {
         if (!blockRef.current) return;
         if (!sectionContext?.sectionRef.current) return;
         if (!stepContext?.stepRef.current) return;
-        if (!stepContext.stepGsapTimeline) return;
+        if (!stepContext.gsapTimeline) return;
 
-        const blockTimeline = gsap.timeline();
+        const blockTimeline = runImmediatGsapAnimations();
 
-        const blockScrollTrigger = getScrollTrigger({
-            element: blockRef.current,
-            overrides: {},
-        });
+        sectionContext.gsapTimeline?.fromTo(
+            blockRef.current,
+            {
+                opacity: 0,
+            },
+            {
+                opacity: 1,
+            }
+        );
 
-        const immediateTimeline = runImmediatGsapAnimations();
-
-        bindScrollTimeline(blockTimeline, blockScrollTrigger);
-
-        stepContext.stepGsapTimeline.add(blockTimeline);
-    }, [gsapFromAnimation, sectionContext]);
+        stepContext.gsapTimeline.add(blockTimeline);
+    }, [sectionContext?.gsapTimeline]);
 
     return (
         <div

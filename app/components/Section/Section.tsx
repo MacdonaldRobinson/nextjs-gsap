@@ -6,6 +6,9 @@ import { useEffect, useRef, useState } from "react";
 import { TSectionBg } from "./SectionBg";
 import { TSectionContent } from "./SectionContent";
 import gsap from "gsap";
+import { ScrollSmoother, ScrollTrigger } from "gsap/all";
+
+gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
 export type TSection = React.HTMLAttributes<HTMLDivElement> & {
     pinSection?: boolean;
@@ -20,37 +23,38 @@ const Section = ({ children, className, ...props }: TSection) => {
         null
     );
 
-    useEffect(() => {
-        console.log(gsapTimeline?.totalDuration());
-    }, [gsapTimeline]);
-
     useGSAP(() => {
         if (!sectionRef.current) return;
 
-        const timeline = gsap.timeline({
-            scrollTrigger: getScrollTrigger({
-                element: sectionRef.current,
-                overrides: {},
-            }),
-        });
+        const timeline = gsap.timeline();
 
         setGsapTimeline(timeline);
+        ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: "top top",
+            end: () => "+=" + timeline.totalDuration() * 1000, // scroll distance in px
+            pin: true,
+            scrub: true,
+            animation: timeline,
+        });
     });
     return (
-        <SectionContext.Provider
-            value={{
-                sectionRef: sectionRef,
-                sectionGsapTimeline: gsapTimeline,
-            }}
+        <div
+            ref={sectionRef}
+            className={`section border-2 border-blue-200 relative w-full h-full ${className}`}
+            {...props}
         >
-            <div
-                ref={sectionRef}
-                className={`section border-2 border-blue-200 relative w-full h-full ${className}`}
-                {...props}
-            >
-                {children}
-            </div>
-        </SectionContext.Provider>
+            {sectionRef && gsapTimeline && (
+                <SectionContext.Provider
+                    value={{
+                        sectionRef: sectionRef,
+                        gsapTimeline: gsapTimeline,
+                    }}
+                >
+                    {children}
+                </SectionContext.Provider>
+            )}
+        </div>
     );
 };
 

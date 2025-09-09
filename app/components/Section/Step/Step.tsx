@@ -18,33 +18,30 @@ const Step = ({ children, className, ...props }: TStep) => {
         null
     );
 
-    useEffect(() => {
-        console.log("Step", gsapTimeline);
-    }, [gsapTimeline]);
-
     useGSAP(() => {
         if (!stepRef.current) return;
-        if (!sectionContext?.sectionGsapTimeline) return;
-
+        if (!sectionContext?.gsapTimeline) return;
         const timeline = gsap.timeline();
 
         setGsapTimeline(timeline);
 
-        sectionContext.sectionGsapTimeline.add(timeline);
-    }, [sectionContext?.sectionGsapTimeline]);
+        sectionContext.gsapTimeline.add(timeline);
+    }, [sectionContext?.gsapTimeline]);
 
     return (
-        <StepContext.Provider
-            value={{ stepRef: stepRef, stepGsapTimeline: gsapTimeline }}
+        <div
+            ref={stepRef}
+            className={`step border-red-200 relative z-10 justify-around w-full flex flex-col ${className}`}
+            {...props}
         >
-            <div
-                ref={stepRef}
-                className={`step border-red-200 relative z-10 justify-around w-full flex flex-col ${className}`}
-                {...props}
-            >
-                {children}
-            </div>
-        </StepContext.Provider>
+            {stepRef && gsapTimeline && (
+                <StepContext.Provider
+                    value={{ stepRef: stepRef, gsapTimeline: gsapTimeline }}
+                >
+                    {children}
+                </StepContext.Provider>
+            )}
+        </div>
     );
 };
 
