@@ -31,3 +31,10 @@ body {
 .block, .step, .section{
   will-change: transform;
 }
+
+html, body {
+  overflow: hidden;
+  height: 100%;
+    overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto; /* prevent momentum bounce */
+}
