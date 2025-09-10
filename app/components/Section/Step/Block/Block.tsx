@@ -1,7 +1,6 @@
 "use client";
 import SectionContext from "@/app/contexts/SectionContext";
 import StepContext from "@/app/contexts/StepContext";
-import { getScrollTrigger } from "@/app/page";
 import { useGSAP } from "@gsap/react";
 import { useRef, useContext } from "react";
 import gsap from "gsap";

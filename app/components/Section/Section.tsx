@@ -72,7 +72,7 @@ const Section = ({
     return (
         <div
             ref={sectionRef}
-            className={`section border-2 border-blue-200 w-[100vw] h-[100vh] relative ${className}`}
+            className={`section w-[100vw] h-[100vh] relative ${className}`}
             {...props}
         >
             {sectionRef && sectionGsapTimeline && (

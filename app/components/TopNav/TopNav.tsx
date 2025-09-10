@@ -1,10 +1,4 @@
-import {
-    forwardRef,
-    MouseEventHandler,
-    useImperativeHandle,
-    useState,
-} from "react";
-import { TSection } from "../Section/Section";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
 
 type TSectionProps = {
