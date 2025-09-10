@@ -77,6 +77,7 @@ export default function Home() {
             content: sectionsRef.current,
             smooth: 1.5,
             effects: true,
+            normalizeScroll: true, // important for mobile
         });
     });
     return (
