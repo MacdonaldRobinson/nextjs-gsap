@@ -32,6 +32,7 @@ export const getScrollTrigger = ({
         invalidateOnRefresh: true,
         start: "top top",
         end: () => "+=" + 7000,
+        pinType: "transform",
         ...overrides,
     };
 };
