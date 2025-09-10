@@ -7,6 +7,7 @@ import { TSectionBg } from "./SectionBg";
 import { TSectionContent } from "./SectionContent";
 import gsap from "gsap";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
+import React from "react";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
@@ -19,9 +20,25 @@ export type TSection = React.HTMLAttributes<HTMLDivElement> & {
 
 const Section = ({ children, className, ...props }: TSection) => {
     const sectionRef = useRef<HTMLDivElement>(null);
-    const [gsapTimeline, setGsapTimeline] = useState<gsap.core.Timeline | null>(
-        null
-    );
+    const [sectionGsapTimeline, setGsapTimeline] =
+        useState<gsap.core.Timeline | null>(null);
+
+    useEffect(() => {
+        if (!sectionRef.current || !sectionGsapTimeline) return;
+
+        // Wait for next tick so all child timelines have been added
+        requestAnimationFrame(() => {
+            console.log(sectionGsapTimeline.totalDuration());
+            ScrollTrigger.create({
+                trigger: sectionRef.current,
+                start: "top top",
+                end: () => "+=" + sectionGsapTimeline.totalDuration() * 1000,
+                pin: true,
+                scrub: true,
+                animation: sectionGsapTimeline,
+            });
+        });
+    }, [sectionGsapTimeline, children]);
 
     useGSAP(() => {
         if (!sectionRef.current) return;
@@ -29,27 +46,26 @@ const Section = ({ children, className, ...props }: TSection) => {
         const timeline = gsap.timeline();
 
         setGsapTimeline(timeline);
-        ScrollTrigger.create({
-            trigger: sectionRef.current,
-            start: "top top",
-            end: () => "+=" + timeline.totalDuration() * 3000, // scroll distance in px
-            pin: true,
-            scrub: true,
-            animation: timeline,
-        });
-    });
+    }, []);
+
+    const registerStepTimeline = (stepTimeline: gsap.core.Timeline) => {
+        if (!sectionGsapTimeline) return;
+
+        sectionGsapTimeline.add(stepTimeline);
+    };
+
     return (
         <div
             ref={sectionRef}
-            className={`section border-2 border-blue-200 relative w-full h-full ${className}`}
+            className={`section border-2 border-blue-200 w-[100vw] h-[100vh] relative ${className}`}
             {...props}
         >
-            {sectionRef && gsapTimeline && (
+            {sectionRef && sectionGsapTimeline && (
                 <SectionContext.Provider
                     value={{
                         sectionRef: sectionRef,
-                        gsapTimeline: gsapTimeline,
-                        stepsRendered: 0,
+                        sectionGsapTimeline: sectionGsapTimeline,
+                        registerStepTimeline: registerStepTimeline,
                     }}
                 >
                     {children}

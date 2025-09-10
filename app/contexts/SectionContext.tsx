@@ -1,9 +1,9 @@
 import { createContext } from "react";
 
 type TSectionContext = {
-    sectionRef: React.RefObject<HTMLDivElement | null>;
-    gsapTimeline: gsap.core.Timeline | null;
-    stepsRendered: number;
+    readonly sectionRef: React.RefObject<HTMLDivElement | null>;
+    readonly sectionGsapTimeline: gsap.core.Timeline | null;
+    registerStepTimeline: (stepTimeline: gsap.core.Timeline) => void;
 };
 
 const SectionContext = createContext<TSectionContext | null>(null);

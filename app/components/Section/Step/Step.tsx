@@ -6,22 +6,23 @@ import { useGSAP } from "@gsap/react";
 import { useRef, useContext, useState, useEffect } from "react";
 import gsap from "gsap";
 import React from "react";
+import { TBlock } from "./Block/Block";
 
 export type TStep = React.HTMLAttributes<HTMLDivElement> & {
-    children: React.ReactNode;
+    children: React.ReactElement<TBlock>;
 };
 
 const Step = ({ children, className, ...props }: TStep) => {
     const stepRef = useRef<HTMLDivElement>(null);
     const sectionContext = useContext(SectionContext);
 
-    const [gsapTimeline, setGsapTimeline] = useState<gsap.core.Timeline | null>(
-        null
-    );
+    const [stepGsapTimeline, setGsapTimeline] =
+        useState<gsap.core.Timeline | null>(null);
 
     useGSAP(() => {
         if (!stepRef.current) return;
-        if (!sectionContext?.gsapTimeline) return;
+        if (!sectionContext?.sectionGsapTimeline) return;
+
         const timeline = gsap.timeline();
 
         timeline.fromTo(
@@ -35,34 +36,39 @@ const Step = ({ children, className, ...props }: TStep) => {
                 xPercent: 0,
             }
         );
+
         setGsapTimeline(timeline);
+    }, [sectionContext?.sectionGsapTimeline]);
 
-        sectionContext.stepsRendered++;
+    const registerBlockTimeline = (blockTimeline: gsap.core.Timeline) => {
+        if (!stepGsapTimeline) return;
 
-        sectionContext.gsapTimeline.add(timeline);
-        if (sectionContext.stepsRendered == React.Children.count(children)) {
+        stepGsapTimeline.add(blockTimeline);
+
+        if (
+            React.Children.count(children) ==
+            stepGsapTimeline.getChildren(false, false, true).length
+        ) {
+            if (!sectionContext) return;
+            stepGsapTimeline.to(stepRef.current, {
+                xPercent: 100,
+            });
+            sectionContext.registerStepTimeline(stepGsapTimeline);
         }
-
-        // setTimeout(() => {
-        //     if (!sectionContext.gsapTimeline) return;
-
-        //     sectionContext.gsapTimeline.add(timeline);
-        //     console.log("Step added with total duration:", timeline.duration());
-        // }, 0);
-    }, [sectionContext?.gsapTimeline]);
+    };
 
     return (
         <div
             ref={stepRef}
-            className={`step border-red-200 z-10 justify-around w-full flex flex-col ${className}`}
+            className={`step border-red-200 z-10 justify-around w-full h-full flex flex-col ${className}`}
             {...props}
         >
-            {stepRef && gsapTimeline && (
+            {stepRef && stepGsapTimeline && (
                 <StepContext.Provider
                     value={{
                         stepRef: stepRef,
-                        gsapTimeline: gsapTimeline,
-                        blocksRendered: 0,
+                        stepGsapTimeline: stepGsapTimeline,
+                        registerBlockTimeline: registerBlockTimeline,
                     }}
                 >
                     {children}

@@ -1,9 +1,8 @@
 import { createContext } from "react";
 
 type TStepContext = {
-    stepRef: React.RefObject<HTMLDivElement | null>;
-    gsapTimeline: gsap.core.Timeline | null;
-    blocksRendered: number;
+    readonly stepRef: React.RefObject<HTMLDivElement | null>;
+    readonly stepGsapTimeline: gsap.core.Timeline | null;
     registerBlockTimeline: (blockTimeline: gsap.core.Timeline) => void;
 };
 

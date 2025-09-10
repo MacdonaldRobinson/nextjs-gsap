@@ -27,44 +27,13 @@ const Block = ({
     const sectionContext = useContext(SectionContext);
     const stepContext = useContext(StepContext);
 
-    const runImmediatGsapAnimations = () => {
-        //const immediateTimeline = gsap.timeline();
-        const immediateTimeline = gsap.timeline();
-
-        const runFromAnimations = () => {
-            if (gsapFromAnimation) {
-                immediateTimeline.from(blockRef.current, {
-                    ...gsapFromAnimation,
-                });
-            }
-        };
-
-        const runToAnimations = () => {
-            if (runToAnimationsImmediatly) {
-                if (gsapToAnimations) {
-                    gsapToAnimations.forEach((toAnimation) => {
-                        immediateTimeline.to(blockRef.current, {
-                            ...toAnimation,
-                        });
-                    });
-                }
-            }
-        };
-
-        runFromAnimations();
-
-        runToAnimations();
-
-        return immediateTimeline;
-    };
-
     useGSAP(() => {
         if (!blockRef.current) return;
         if (!sectionContext?.sectionRef.current) return;
         if (!stepContext?.stepRef.current) return;
-        if (!stepContext.gsapTimeline) return;
+        if (!stepContext.stepGsapTimeline) return;
 
-        const blockTimeline = gsap.timeline(); //runImmediatGsapAnimations();
+        const blockTimeline = gsap.timeline();
         blockTimeline.fromTo(
             blockRef.current,
             {
@@ -77,9 +46,8 @@ const Block = ({
             }
         );
 
-        stepContext.gsapTimeline.add(blockTimeline);
-        stepContext.blocksRendered++;
-    }, [sectionContext?.gsapTimeline]);
+        stepContext.registerBlockTimeline(blockTimeline);
+    }, [sectionContext?.sectionGsapTimeline]);
 
     return (
         <div

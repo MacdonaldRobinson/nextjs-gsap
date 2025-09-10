@@ -28,7 +28,7 @@ export const getScrollTrigger = ({
         scrub: true,
         scroller: ".sectionsWrapper",
         invalidateOnRefresh: true,
-        start: "bottom bottom",
+        start: "top top",
         end: () => "+=" + element.scrollHeight,
         ...overrides,
     };
@@ -82,19 +82,8 @@ export default function Home() {
                         type="image"
                         src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
                     />
-                    <SectionContent className="w-[100vw] h-[100vh] relative">
-                        <Step className="w-[100vw] h-[100vh] bg-red-300 absolute top-0">
-                            <Block>
-                                <PlaceHolderText />
-                            </Block>
-                            <Block>
-                                <PlaceHolderText2 />
-                            </Block>
-                            <Block>
-                                <PlaceHolderText />
-                            </Block>
-                        </Step>
-                        <Step className="w-[100vw] h-[100vh] bg-green-300 absolute top-0">
+                    <SectionContent>
+                        <Step className="bg-green-300">
                             <Block>
                                 <PlaceHolderText />
                             </Block>
@@ -112,8 +101,8 @@ export default function Home() {
                         type="image"
                         src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
                     />
-                    <SectionContent className="w-[100vw] h-[100vh] relative">
-                        <Step className="w-[100vw] h-[100vh] bg-orange-300 absolute top-0">
+                    <SectionContent>
+                        <Step className="bg-orange-300 absolute top-0">
                             <Block>
                                 <PlaceHolderText />
                             </Block>
@@ -124,7 +113,7 @@ export default function Home() {
                                 <PlaceHolderText />
                             </Block>
                         </Step>
-                        <Step className="w-[100vw] h-[100vh] bg-pink-300 absolute top-0">
+                        <Step className="bg-pink-300 absolute top-0">
                             <Block>
                                 <PlaceHolderText />
                             </Block>
