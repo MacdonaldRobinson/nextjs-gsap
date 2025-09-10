@@ -5,6 +5,7 @@ import { getScrollTrigger } from "@/app/page";
 import { useGSAP } from "@gsap/react";
 import { useRef, useContext, useState, useEffect } from "react";
 import gsap from "gsap";
+import React from "react";
 
 export type TStep = React.HTMLAttributes<HTMLDivElement> & {
     children: React.ReactNode;
@@ -23,9 +24,6 @@ const Step = ({ children, className, ...props }: TStep) => {
         if (!sectionContext?.gsapTimeline) return;
         const timeline = gsap.timeline();
 
-        const isFirstStepInSection =
-            stepRef.current.parentElement?.childNodes.entries.T;
-
         timeline.fromTo(
             stepRef.current,
             {
@@ -37,12 +35,20 @@ const Step = ({ children, className, ...props }: TStep) => {
                 xPercent: 0,
             }
         );
-
-        timeline.to(stepRef.current, { opacity: 1, duration: 2 }); // hold
-
         setGsapTimeline(timeline);
 
+        sectionContext.stepsRendered++;
+
         sectionContext.gsapTimeline.add(timeline);
+        if (sectionContext.stepsRendered == React.Children.count(children)) {
+        }
+
+        // setTimeout(() => {
+        //     if (!sectionContext.gsapTimeline) return;
+
+        //     sectionContext.gsapTimeline.add(timeline);
+        //     console.log("Step added with total duration:", timeline.duration());
+        // }, 0);
     }, [sectionContext?.gsapTimeline]);
 
     return (

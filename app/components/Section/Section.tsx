@@ -32,7 +32,7 @@ const Section = ({ children, className, ...props }: TSection) => {
         ScrollTrigger.create({
             trigger: sectionRef.current,
             start: "top top",
-            end: () => "+=" + timeline.totalDuration() * 1000, // scroll distance in px
+            end: () => "+=" + timeline.totalDuration() * 3000, // scroll distance in px
             pin: true,
             scrub: true,
             animation: timeline,

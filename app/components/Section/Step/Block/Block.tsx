@@ -76,9 +76,9 @@ const Block = ({
                 yPercent: 0,
             }
         );
-        //blockTimeline.to(blockRef.current, { opacity: 1, duration: 2 }); // hold
 
         stepContext.gsapTimeline.add(blockTimeline);
+        stepContext.blocksRendered++;
     }, [sectionContext?.gsapTimeline]);
 
     return (
