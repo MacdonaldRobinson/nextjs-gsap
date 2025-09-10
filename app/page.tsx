@@ -82,18 +82,56 @@ export default function Home() {
                         type="image"
                         src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
                     />
-                    <SectionContent>
-                        <Step className="w-[100vw] h-[100vh] bg-amber-300">
-                            <Block className="flex w-[100vw] h-[100vh] absolute justify-center bg-red-300">
+                    <SectionContent className="w-[100vw] h-[100vh] relative">
+                        <Step className="w-[100vw] h-[100vh] bg-red-300 absolute top-0">
+                            <Block>
                                 <PlaceHolderText />
-                                <Block>
-                                    <PlaceHolderText2 />
-                                </Block>
                             </Block>
-                            <Block className="flex w-[100vw] h-[100vh] absolute justify-center bg-green-300">
+                            <Block>
                                 <PlaceHolderText2 />
                             </Block>
-                            <Block className="flex w-[100vw] h-[100vh] absolute justify-center bg-blue-300">
+                            <Block>
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                        <Step className="w-[100vw] h-[100vh] bg-green-300 absolute top-0">
+                            <Block>
+                                <PlaceHolderText />
+                            </Block>
+                            <Block>
+                                <PlaceHolderText2 />
+                            </Block>
+                            <Block>
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                    </SectionContent>
+                </Section>
+                <Section>
+                    <SectionBg
+                        type="image"
+                        src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
+                    />
+                    <SectionContent className="w-[100vw] h-[100vh] relative">
+                        <Step className="w-[100vw] h-[100vh] bg-red-300 absolute top-0">
+                            <Block>
+                                <PlaceHolderText />
+                            </Block>
+                            <Block>
+                                <PlaceHolderText2 />
+                            </Block>
+                            <Block>
+                                <PlaceHolderText />
+                            </Block>
+                        </Step>
+                        <Step className="w-[100vw] h-[100vh] bg-green-300 absolute top-0">
+                            <Block>
+                                <PlaceHolderText />
+                            </Block>
+                            <Block>
+                                <PlaceHolderText2 />
+                            </Block>
+                            <Block>
                                 <PlaceHolderText />
                             </Block>
                         </Step>
@@ -132,32 +170,6 @@ export default function Home() {
                                 <PlaceHolderText />
                             </Block>
                             <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                        </Step>
-                    </SectionContent>
-                </Section>
-                <Section>
-                    <SectionBg type="className" className="bg-orange-200" />
-                    <SectionContent>
-                        <Step>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12 self-end">
-                                <PlaceHolderText />
-                            </Block>
-                        </Step>
-                    </SectionContent>
-                </Section>
-                <Section>
-                    <SectionBg type="className" className="bg-purple-200" />
-                    <SectionContent>
-                        <Step>
-                            <Block className="flex w-6/12">
-                                <PlaceHolderText />
-                            </Block>
-                            <Block className="flex w-6/12 self-end">
                                 <PlaceHolderText />
                             </Block>
                         </Step>

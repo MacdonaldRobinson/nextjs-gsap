@@ -23,20 +23,41 @@ const Step = ({ children, className, ...props }: TStep) => {
         if (!sectionContext?.gsapTimeline) return;
         const timeline = gsap.timeline();
 
+        const isFirstStepInSection =
+            stepRef.current.parentElement?.childNodes.entries.T;
+
+        timeline.fromTo(
+            stepRef.current,
+            {
+                opacity: 0,
+                xPercent: -100,
+            },
+            {
+                opacity: 1,
+                xPercent: 0,
+            }
+        );
+
+        timeline.to(stepRef.current, { opacity: 1, duration: 2 }); // hold
+
         setGsapTimeline(timeline);
 
-        sectionContext.gsapTimeline.add(timeline, "+=1");
+        sectionContext.gsapTimeline.add(timeline);
     }, [sectionContext?.gsapTimeline]);
 
     return (
         <div
             ref={stepRef}
-            className={`step border-red-200 relative z-10 justify-around w-full flex flex-col ${className}`}
+            className={`step border-red-200 z-10 justify-around w-full flex flex-col ${className}`}
             {...props}
         >
             {stepRef && gsapTimeline && (
                 <StepContext.Provider
-                    value={{ stepRef: stepRef, gsapTimeline: gsapTimeline }}
+                    value={{
+                        stepRef: stepRef,
+                        gsapTimeline: gsapTimeline,
+                        blocksRendered: 0,
+                    }}
                 >
                     {children}
                 </StepContext.Provider>

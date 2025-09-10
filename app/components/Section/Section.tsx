@@ -49,6 +49,7 @@ const Section = ({ children, className, ...props }: TSection) => {
                     value={{
                         sectionRef: sectionRef,
                         gsapTimeline: gsapTimeline,
+                        stepsRendered: 0,
                     }}
                 >
                     {children}

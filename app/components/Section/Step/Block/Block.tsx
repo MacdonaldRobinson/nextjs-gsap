@@ -58,35 +58,6 @@ const Block = ({
         return immediateTimeline;
     };
 
-    const bindDefaultScrollAnimations = (
-        runOnTimeline: gsap.core.Timeline,
-        scrollTrigger: ScrollTrigger.Vars
-    ) => {
-        if (!blockRef.current) return;
-        if (!sectionContext?.sectionRef.current) return;
-
-        const blockRect = blockRef.current.getBoundingClientRect();
-        const sectionRect =
-            sectionContext.sectionRef.current.getBoundingClientRect();
-
-        const isOnRight =
-            blockRect.left + blockRect.width > sectionRect.width / 2;
-
-        runOnTimeline.fromTo(
-            blockRef.current,
-            {
-                opacity: 0,
-                xPercent: isOnRight ? 100 : -100,
-                duration: 1,
-            },
-            {
-                xPercent: 0,
-                opacity: 1,
-                scrollTrigger: scrollTrigger,
-            }
-        );
-    };
-
     useGSAP(() => {
         if (!blockRef.current) return;
         if (!sectionContext?.sectionRef.current) return;
@@ -94,19 +65,18 @@ const Block = ({
         if (!stepContext.gsapTimeline) return;
 
         const blockTimeline = gsap.timeline(); //runImmediatGsapAnimations();
-
         blockTimeline.fromTo(
             blockRef.current,
             {
                 opacity: 0,
-                yPercent: 100,
+                yPercent: -100,
             },
             {
                 opacity: 1,
                 yPercent: 0,
             }
         );
-        blockTimeline.to(blockRef.current, { opacity: 1, duration: 5 }); // hold
+        //blockTimeline.to(blockRef.current, { opacity: 1, duration: 2 }); // hold
 
         stepContext.gsapTimeline.add(blockTimeline);
     }, [sectionContext?.gsapTimeline]);
