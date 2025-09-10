@@ -9,7 +9,7 @@ import React from "react";
 import { TBlock } from "./Block/Block";
 
 export type TStep = React.HTMLAttributes<HTMLDivElement> & {
-    children: React.ReactElement<TBlock>;
+    children: React.ReactElement<TBlock> | React.ReactElement<TBlock>[];
 };
 
 const Step = ({ children, className, ...props }: TStep) => {
