@@ -45,17 +45,6 @@ const Step = ({ children, className, ...props }: TStep) => {
         if (!stepGsapTimeline) return;
 
         stepGsapTimeline.add(blockTimeline);
-
-        // if (
-        //     React.Children.count(children) ==
-        //     stepGsapTimeline.getChildren(false, false, true).length
-        // ) {
-        //     if (!sectionContext) return;
-        //     stepGsapTimeline.to(stepRef.current, {
-        //         xPercent: 100,
-        //     });
-        //     sectionContext.registerStepTimeline(stepGsapTimeline);
-        // }
     };
 
     return (

@@ -35,9 +35,9 @@ export const getScrollTrigger = ({
     };
 };
 
-const Sections = ({ children, ref }: TSections) => {
+const Sections = ({ children, className, ref }: TSections) => {
     return (
-        <div className="sections h-fit w-full" ref={ref}>
+        <div className={`sections h-fit w-full ${className}`} ref={ref}>
             {children}
         </div>
     );
@@ -77,7 +77,7 @@ export default function Home() {
     });
     return (
         <div className="sectionsWrapper">
-            <Sections ref={sectionsRef}>
+            <Sections ref={sectionsRef} className="text-white">
                 <Section>
                     <Background
                         type="image"
@@ -85,6 +85,10 @@ export default function Home() {
                     />
                     <SectionContent>
                         <Step className="bg-green-300">
+                            <Background
+                                type="image"
+                                src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
+                            />
                             <Block>
                                 <PlaceHolderText />
                             </Block>
@@ -100,10 +104,14 @@ export default function Home() {
                 <Section>
                     <Background
                         type="image"
-                        src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
+                        src="https://via.assets.so/game.png?id=3&q=95&w=360&h=360&fit=fill"
                     />
                     <SectionContent>
                         <Step className="bg-orange-300 absolute top-0">
+                            <Background
+                                type="image"
+                                src="https://via.assets.so/game.png?id=4&q=95&w=360&h=360&fit=fill"
+                            />
                             <Block>
                                 <PlaceHolderText />
                             </Block>
@@ -115,6 +123,10 @@ export default function Home() {
                             </Block>
                         </Step>
                         <Step className="bg-pink-300 absolute top-0">
+                            <Background
+                                type="image"
+                                src="https://via.assets.so/game.png?id=5&q=95&w=360&h=360&fit=fill"
+                            />
                             <Block>
                                 <PlaceHolderText />
                             </Block>
@@ -128,9 +140,16 @@ export default function Home() {
                     </SectionContent>
                 </Section>
                 <Section>
-                    <Background type="className" className="bg-green-200" />
+                    <Background
+                        type="image"
+                        src="https://via.assets.so/game.png?id=6&q=95&w=360&h=360&fit=fill"
+                    />
                     <SectionContent>
                         <Step>
+                            <Background
+                                type="image"
+                                src="https://via.assets.so/game.png?id=7&q=95&w=360&h=360&fit=fill"
+                            />
                             <Block className="flex w-6/12">
                                 <PlaceHolderText />
                             </Block>
@@ -142,6 +161,10 @@ export default function Home() {
                             </Block>
                         </Step>
                         <Step>
+                            <Background
+                                type="image"
+                                src="https://via.assets.so/game.png?id=8&q=95&w=360&h=360&fit=fill"
+                            />
                             <Block className="flex w-6/12">
                                 <PlaceHolderText />
                             </Block>
@@ -153,6 +176,10 @@ export default function Home() {
                             </Block>
                         </Step>
                         <Step>
+                            <Background
+                                type="image"
+                                src="https://via.assets.so/game.png?id=9&q=95&w=360&h=360&fit=fill"
+                            />
                             <Block className="flex w-6/12">
                                 <PlaceHolderText />
                             </Block>
@@ -166,9 +193,16 @@ export default function Home() {
                     </SectionContent>
                 </Section>
                 <Section>
-                    <Background type="className" className="bg-gray-200" />
+                    <Background
+                        type="image"
+                        src="https://via.assets.so/game.png?id=10&q=95&w=360&h=360&fit=fill"
+                    />
                     <SectionContent>
                         <Step>
+                            <Background
+                                type="image"
+                                src="https://via.assets.so/game.png?id=11&q=95&w=360&h=360&fit=fill"
+                            />
                             <Block className="flex w-6/12">
                                 <PlaceHolderText />
                             </Block>
