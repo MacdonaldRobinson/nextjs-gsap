@@ -17,10 +17,13 @@ export type TBackground =
 const Background = (props: TBackground) => {
     const { type } = props;
 
+    const defaultClassName = `background absolute z-0 w-full h-full top-0 left-0 z-[-1]`;
+
     if (type === "image") {
         const { src, className = "", ...rest } = props; // rest contains only valid div/html attributes
+
         return (
-            <div className="background absolute z-0 w-full h-full">
+            <div className={`${defaultClassName}`}>
                 <img
                     src={src}
                     className={`h-full w-full object-cover ${className}`}
@@ -33,7 +36,7 @@ const Background = (props: TBackground) => {
     if (type === "video") {
         const { src, className = "", ...rest } = props; // rest contains only VideoHTMLAttributes
         return (
-            <div className="background absolute z-0 w-full h-full">
+            <div className={`${defaultClassName}`}>
                 <video
                     src={src}
                     className={`h-full w-full object-cover ${className}`}
@@ -49,7 +52,7 @@ const Background = (props: TBackground) => {
     // type === "className"
     const { className = "", ...rest } = props; // rest contains div attributes
     return (
-        <div className="background absolute z-0 w-full h-full">
+        <div className={`${defaultClassName}`}>
             <div
                 className={`h-full w-full object-cover ${className}`}
                 {...rest}

@@ -8,10 +8,13 @@ import { TSectionContent } from "./SectionContent";
 import gsap from "gsap";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
 import React from "react";
+import { TTopNav } from "../TopNav/TopNav";
 
 gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
 
 export type TSection = React.HTMLAttributes<HTMLDivElement> & {
+    topNavRef?: React.RefObject<TTopNav | null>;
+    sectionKey: string;
     pinSection?: boolean;
     children?:
         | React.ReactElement<TSectionContent>
@@ -21,7 +24,13 @@ export type TSection = React.HTMLAttributes<HTMLDivElement> & {
           ];
 };
 
-const Section = ({ children, className, ...props }: TSection) => {
+const Section = ({
+    children,
+    className,
+    sectionKey,
+    topNavRef,
+    ...props
+}: TSection) => {
     const sectionRef = useRef<HTMLDivElement>(null);
     const [sectionGsapTimeline, setGsapTimeline] =
         useState<gsap.core.Timeline | null>(null);
@@ -32,11 +41,24 @@ const Section = ({ children, className, ...props }: TSection) => {
         const timeline = gsap.timeline({
             scrollTrigger: getScrollTrigger({
                 element: sectionRef.current,
+                overrides: {
+                    id: sectionKey,
+                },
             }),
         });
 
         setGsapTimeline(timeline);
     }, []);
+
+    useEffect(() => {
+        if (!topNavRef?.current) return;
+        if (!sectionRef?.current) return;
+
+        topNavRef.current.addSection({
+            sectionKey: sectionKey,
+            sectionRef: sectionRef,
+        });
+    }, [sectionKey, topNavRef]);
 
     const registerStepTimeline = (stepTimeline: gsap.core.Timeline) => {
         if (!sectionGsapTimeline) return;
