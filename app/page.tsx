@@ -26,10 +26,11 @@ export const getScrollTrigger = ({
     return {
         trigger: element,
         scrub: true,
+        pin: true,
         scroller: ".sectionsWrapper",
         invalidateOnRefresh: true,
         start: "top top",
-        end: () => "+=" + element.scrollHeight,
+        end: () => "+=" + 7000,
         ...overrides,
     };
 };
@@ -80,7 +81,7 @@ export default function Home() {
                 <Section>
                     <SectionBg
                         type="image"
-                        src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
+                        src="https://via.assets.so/game.png?id=1&q=95&w=360&h=360&fit=fill"
                     />
                     <SectionContent>
                         <Step className="bg-green-300">

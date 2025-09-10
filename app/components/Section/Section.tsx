@@ -23,27 +23,14 @@ const Section = ({ children, className, ...props }: TSection) => {
     const [sectionGsapTimeline, setGsapTimeline] =
         useState<gsap.core.Timeline | null>(null);
 
-    useEffect(() => {
-        if (!sectionRef.current || !sectionGsapTimeline) return;
-
-        // Wait for next tick so all child timelines have been added
-        requestAnimationFrame(() => {
-            console.log(sectionGsapTimeline.totalDuration());
-            ScrollTrigger.create({
-                trigger: sectionRef.current,
-                start: "top top",
-                end: () => "+=" + sectionGsapTimeline.totalDuration() * 1000,
-                pin: true,
-                scrub: true,
-                animation: sectionGsapTimeline,
-            });
-        });
-    }, [sectionGsapTimeline, children]);
-
     useGSAP(() => {
         if (!sectionRef.current) return;
 
-        const timeline = gsap.timeline();
+        const timeline = gsap.timeline({
+            scrollTrigger: getScrollTrigger({
+                element: sectionRef.current,
+            }),
+        });
 
         setGsapTimeline(timeline);
     }, []);
