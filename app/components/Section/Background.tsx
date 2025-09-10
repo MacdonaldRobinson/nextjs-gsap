@@ -1,6 +1,6 @@
 "use client";
 import gsap from "gsap";
-export type TSectionBg =
+export type TBackground =
     | (React.HTMLAttributes<HTMLDivElement> & {
           type: "image";
           src: string;
@@ -14,13 +14,13 @@ export type TSectionBg =
           src?: never;
       });
 
-const SectionBg = (props: TSectionBg) => {
+const Background = (props: TBackground) => {
     const { type } = props;
 
     if (type === "image") {
         const { src, className = "", ...rest } = props; // rest contains only valid div/html attributes
         return (
-            <div className="sectionBg absolute z-0 w-full h-full">
+            <div className="background absolute z-0 w-full h-full">
                 <img
                     src={src}
                     className={`h-full w-full object-cover ${className}`}
@@ -33,7 +33,7 @@ const SectionBg = (props: TSectionBg) => {
     if (type === "video") {
         const { src, className = "", ...rest } = props; // rest contains only VideoHTMLAttributes
         return (
-            <div className="sectionBg absolute z-0 w-full h-full">
+            <div className="background absolute z-0 w-full h-full">
                 <video
                     src={src}
                     className={`h-full w-full object-cover ${className}`}
@@ -49,7 +49,7 @@ const SectionBg = (props: TSectionBg) => {
     // type === "className"
     const { className = "", ...rest } = props; // rest contains div attributes
     return (
-        <div className="sectionBg absolute z-0 w-full h-full">
+        <div className="background absolute z-0 w-full h-full">
             <div
                 className={`h-full w-full object-cover ${className}`}
                 {...rest}
@@ -58,4 +58,4 @@ const SectionBg = (props: TSectionBg) => {
     );
 };
 
-export default SectionBg;
+export default Background;

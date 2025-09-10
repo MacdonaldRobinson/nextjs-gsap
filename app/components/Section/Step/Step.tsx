@@ -23,9 +23,9 @@ const Step = ({ children, className, ...props }: TStep) => {
         if (!stepRef.current) return;
         if (!sectionContext?.sectionGsapTimeline) return;
 
-        const timeline = gsap.timeline();
+        const stepTimeline = gsap.timeline();
 
-        timeline.fromTo(
+        stepTimeline.fromTo(
             stepRef.current,
             {
                 opacity: 0,
@@ -37,7 +37,8 @@ const Step = ({ children, className, ...props }: TStep) => {
             }
         );
 
-        setGsapTimeline(timeline);
+        setGsapTimeline(stepTimeline);
+        sectionContext.registerStepTimeline(stepTimeline);
     }, [sectionContext?.sectionGsapTimeline]);
 
     const registerBlockTimeline = (blockTimeline: gsap.core.Timeline) => {
@@ -45,16 +46,16 @@ const Step = ({ children, className, ...props }: TStep) => {
 
         stepGsapTimeline.add(blockTimeline);
 
-        if (
-            React.Children.count(children) ==
-            stepGsapTimeline.getChildren(false, false, true).length
-        ) {
-            if (!sectionContext) return;
-            stepGsapTimeline.to(stepRef.current, {
-                xPercent: 100,
-            });
-            sectionContext.registerStepTimeline(stepGsapTimeline);
-        }
+        // if (
+        //     React.Children.count(children) ==
+        //     stepGsapTimeline.getChildren(false, false, true).length
+        // ) {
+        //     if (!sectionContext) return;
+        //     stepGsapTimeline.to(stepRef.current, {
+        //         xPercent: 100,
+        //     });
+        //     sectionContext.registerStepTimeline(stepGsapTimeline);
+        // }
     };
 
     return (

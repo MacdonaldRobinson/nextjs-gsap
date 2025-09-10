@@ -3,7 +3,7 @@ import SectionContext from "@/app/contexts/SectionContext";
 import { getScrollTrigger } from "@/app/page";
 import { useGSAP } from "@gsap/react";
 import { useEffect, useRef, useState } from "react";
-import { TSectionBg } from "./SectionBg";
+import { TBackground } from "./Background";
 import { TSectionContent } from "./SectionContent";
 import gsap from "gsap";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
@@ -15,7 +15,10 @@ export type TSection = React.HTMLAttributes<HTMLDivElement> & {
     pinSection?: boolean;
     children?:
         | React.ReactElement<TSectionContent>
-        | [React.ReactElement<TSectionBg>, React.ReactElement<TSectionContent>];
+        | [
+              React.ReactElement<TBackground>,
+              React.ReactElement<TSectionContent>
+          ];
 };
 
 const Section = ({ children, className, ...props }: TSection) => {
@@ -38,7 +41,10 @@ const Section = ({ children, className, ...props }: TSection) => {
     const registerStepTimeline = (stepTimeline: gsap.core.Timeline) => {
         if (!sectionGsapTimeline) return;
 
-        sectionGsapTimeline.add(stepTimeline);
+        sectionGsapTimeline.add(
+            stepTimeline,
+            "+=" + sectionGsapTimeline.getChildren().length
+        );
     };
 
     return (

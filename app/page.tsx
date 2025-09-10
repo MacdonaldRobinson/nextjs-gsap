@@ -3,7 +3,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
 import { useRef } from "react";
 import Section, { TSection } from "./components/Section/Section";
-import SectionBg from "./components/Section/SectionBg";
+import Background from "./components/Section/Background";
 import SectionContent from "./components/Section/SectionContent";
 import Block from "./components/Section/Step/Block/Block";
 import Step from "./components/Section/Step/Step";
@@ -79,7 +79,7 @@ export default function Home() {
         <div className="sectionsWrapper">
             <Sections ref={sectionsRef}>
                 <Section>
-                    <SectionBg
+                    <Background
                         type="image"
                         src="https://via.assets.so/game.png?id=1&q=95&w=360&h=360&fit=fill"
                     />
@@ -98,7 +98,7 @@ export default function Home() {
                     </SectionContent>
                 </Section>
                 <Section>
-                    <SectionBg
+                    <Background
                         type="image"
                         src="https://via.assets.so/game.png?id=2&q=95&w=360&h=360&fit=fill"
                     />
@@ -128,7 +128,7 @@ export default function Home() {
                     </SectionContent>
                 </Section>
                 <Section>
-                    <SectionBg type="className" className="bg-green-200" />
+                    <Background type="className" className="bg-green-200" />
                     <SectionContent>
                         <Step>
                             <Block className="flex w-6/12">
@@ -166,7 +166,7 @@ export default function Home() {
                     </SectionContent>
                 </Section>
                 <Section>
-                    <SectionBg type="className" className="bg-gray-200" />
+                    <Background type="className" className="bg-gray-200" />
                     <SectionContent>
                         <Step>
                             <Block className="flex w-6/12">
