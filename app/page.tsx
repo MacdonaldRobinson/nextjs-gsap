@@ -90,30 +90,14 @@ export default function Home() {
                         src="https://www.pexels.com/download/video/3141206/"
                     />
                     <SectionContent>
-                        <Step className="bg-orange-300 absolute top-0">
-                            <Background
-                                type="image"
-                                src="https://via.assets.so/game.png?id=11&q=95&w=360&h=360&fit=fill"
-                            />
+                        <Step className="absolute top-0">
                             <Block>
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=11&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                             <Block>
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=12&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText2 />
                             </Block>
                             <Block>
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=13&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                         </Step>
@@ -124,64 +108,28 @@ export default function Home() {
                         type="video"
                         src="https://www.pexels.com/download/video/7385122/"
                     />
-                    <SectionContent>
-                        <Step>
-                            <Background
-                                type="image"
-                                src="https://via.assets.so/game.png?id=7&q=95&w=360&h=360&fit=fill"
-                            />
+                    <SectionContent className="flex flex-col gap-2">
+                        <Step className="bg-black/50">
                             <Block className="flex w-6/12">
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=1&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                             <Block className="flex w-6/12 self-end">
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=2&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                         </Step>
-                        <Step>
-                            <Background
-                                type="image"
-                                src="https://via.assets.so/game.png?id=8&q=95&w=360&h=360&fit=fill"
-                            />
+                        <Step className="bg-black/50">
                             <Block className="flex w-6/12">
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=3&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                             <Block className="flex w-6/12 self-end">
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=4&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                         </Step>
-                        <Step>
-                            <Background
-                                type="image"
-                                src="https://via.assets.so/game.png?id=9&q=95&w=360&h=360&fit=fill"
-                            />
+                        <Step className="bg-black/50">
                             <Block className="flex w-6/12">
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=5&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                             <Block className="flex w-6/12 self-end">
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=6&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                         </Step>
@@ -195,24 +143,12 @@ export default function Home() {
                     <SectionContent>
                         <Step className="absolute top-0">
                             <Block>
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=5&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                             <Block>
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=7&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText2 />
                             </Block>
                             <Block>
-                                <Background
-                                    type="image"
-                                    src="https://via.assets.so/album.png?id=8&q=95&w=360&h=360&fit=fill"
-                                />
                                 <PlaceHolderText />
                             </Block>
                         </Step>

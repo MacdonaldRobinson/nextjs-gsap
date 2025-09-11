@@ -49,7 +49,11 @@ const Block = ({
     }, [sectionContext?.sectionGsapTimeline]);
 
     return (
-        <div ref={blockRef} className={`block p-2 ${className}`} {...props}>
+        <div
+            ref={blockRef}
+            className={`block bg-black/50 rounded-2xl text-center p-2 ${className}`}
+            {...props}
+        >
             {children}
         </div>
     );
