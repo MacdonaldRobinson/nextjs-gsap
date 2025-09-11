@@ -3,7 +3,7 @@ import { fetchPost } from "@/app/libs/fetchPosts";
 import { NextRequest, NextResponse } from "next/server"
 
 type TParams = {
-    postId:string;
+    postId:number;
 }
 
 export const GET = async (request: NextRequest, ctx: RouteContext<AppRouteHandlerRoutes>)=>{    

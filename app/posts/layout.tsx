@@ -3,7 +3,7 @@ import Providers from "../contexts/Providers";
 
 type TPostsLayout = {
     children: React.ReactNode;
-    modal: React.ReactNode;
+    modal?: React.ReactNode;
 };
 
 const PostsLayout = ({ children, modal }: TPostsLayout) => {
