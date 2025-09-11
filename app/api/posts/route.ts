@@ -1,19 +1,8 @@
-import axios from "axios";
+import { fetchPosts } from "@/app/libs/fetchPosts";
 import { NextRequest, NextResponse } from "next/server";
 
-export type TPost = {
-    userId: number;
-    id:     number;
-    title:  string;
-    body:   string;
-}
+export const GET = async (request: NextRequest)=>{    
+    const {data: posts} = await fetchPosts();
 
-export const GET = async (nextRequest: NextRequest)=>{
-
-    const {data} = await axios.get<TPost[]>("https://jsonplaceholder.typicode.com/posts")
-
-
-    return NextResponse.json({
-        posts: data
-    })
+    return NextResponse.json(posts)
 }
