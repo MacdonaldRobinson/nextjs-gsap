@@ -1,5 +1,6 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { ScrollSmoother, ScrollTrigger } from "gsap/all";
+import gsap from "gsap";
 
 type TSectionProps = {
     sectionKey: string;
@@ -11,6 +12,7 @@ export type TTopNav = {
 };
 
 const TopNav = forwardRef<TTopNav>((props, ref) => {
+    const topNavRef = useRef<HTMLUListElement>(null);
     const [sectionStates, setSectionStates] = useState<TSectionProps[]>([]);
 
     useImperativeHandle(ref, () => {
@@ -36,8 +38,13 @@ const TopNav = forwardRef<TTopNav>((props, ref) => {
         }
     };
 
+    gsap.fromTo(topNavRef.current, { yPercent: -100 }, { yPercent: 0 });
+
     return (
-        <ul className="absolute z-50 top-0 right-0 text-white flex flex-row gap-5 w-fit justify-end bg-black/50 p-3 text-2xl font-bold">
+        <ul
+            ref={topNavRef}
+            className="absolute z-50 top-0 right-0 text-white flex flex-row gap-5 w-fit justify-end bg-black/50 p-3 text-2xl font-bold"
+        >
             {sectionStates.map((sectionState) => {
                 return (
                     <li key={sectionState.sectionKey}>

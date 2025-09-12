@@ -29,6 +29,7 @@ const Section = ({
     className,
     sectionKey,
     topNavRef,
+    pinSection = true,
     ...props
 }: TSection) => {
     const sectionRef = useRef<HTMLDivElement>(null);
@@ -43,6 +44,7 @@ const Section = ({
                 element: sectionRef.current,
                 overrides: {
                     id: sectionKey,
+                    pin: pinSection,
                 },
             }),
         });
