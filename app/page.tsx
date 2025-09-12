@@ -27,7 +27,7 @@ export const getScrollTrigger = ({
     return {
         trigger: element,
         scrub: true,
-        pin: true,
+        pin: false,
         scroller: ".sectionsWrapper",
         invalidateOnRefresh: true,
         start: "top top",
@@ -84,18 +84,19 @@ export default function Home() {
         <div className="sectionsWrapper">
             <TopNav ref={topNavRef} />
             <Sections ref={sectionsRef} className="text-white">
-                <Section sectionKey="Home" topNavRef={topNavRef}>
+                <Section
+                    sectionKey="Home"
+                    topNavRef={topNavRef}
+                    pinSection={true}
+                >
                     <Background
                         type="video"
                         src="https://www.pexels.com/download/video/3141206/"
                     />
                     <SectionContent>
-                        <Step className="absolute top-0">
+                        <Step gsapToAnimations={[{}]}>
                             <Block>
                                 <PlaceHolderText />
-                            </Block>
-                            <Block>
-                                <PlaceHolderText2 />
                             </Block>
                             <Block>
                                 <PlaceHolderText />
@@ -142,12 +143,6 @@ export default function Home() {
                     />
                     <SectionContent>
                         <Step className="absolute top-0">
-                            <Block>
-                                <PlaceHolderText />
-                            </Block>
-                            <Block>
-                                <PlaceHolderText2 />
-                            </Block>
                             <Block>
                                 <PlaceHolderText />
                             </Block>

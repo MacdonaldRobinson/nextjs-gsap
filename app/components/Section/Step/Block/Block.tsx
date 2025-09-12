@@ -4,24 +4,14 @@ import StepContext from "@/app/contexts/StepContext";
 import { useGSAP } from "@gsap/react";
 import { useRef, useContext } from "react";
 import gsap from "gsap";
+import { getScrollTrigger } from "@/app/page";
 
 export type TBlock = React.HTMLAttributes<HTMLDivElement> & {
     children: React.ReactNode;
-    gsapFromAnimation?: gsap.TweenVars;
     gsapToAnimations?: gsap.TweenVars[];
-    enableGsapAnimations?: boolean;
-    runToAnimationsImmediatly?: boolean;
 };
 
-const Block = ({
-    children,
-    className,
-    gsapFromAnimation,
-    gsapToAnimations,
-    runToAnimationsImmediatly = false,
-    enableGsapAnimations = true,
-    ...props
-}: TBlock) => {
+const Block = ({ children, className, gsapToAnimations, ...props }: TBlock) => {
     const blockRef = useRef<HTMLDivElement>(null);
     const sectionContext = useContext(SectionContext);
     const stepContext = useContext(StepContext);
@@ -33,17 +23,24 @@ const Block = ({
         if (!stepContext.stepGsapTimeline) return;
 
         const blockTimeline = gsap.timeline();
-        blockTimeline.fromTo(
-            blockRef.current,
-            {
-                opacity: 0,
-                yPercent: -100,
-            },
-            {
-                opacity: 1,
-                yPercent: 0,
-            }
-        );
+
+        if (!gsapToAnimations) {
+            blockTimeline.fromTo(
+                blockRef.current,
+                {
+                    opacity: 0,
+                    xPercent: -100,
+                },
+                {
+                    opacity: 1,
+                    xPercent: 0,
+                }
+            );
+        }
+
+        gsapToAnimations?.forEach((toAnimation) => {
+            blockTimeline.to(blockRef.current, toAnimation);
+        });
 
         stepContext.registerBlockTimeline(blockTimeline);
     }, [sectionContext?.sectionGsapTimeline]);
