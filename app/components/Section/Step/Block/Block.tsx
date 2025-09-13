@@ -24,6 +24,8 @@ const Block = ({ children, className, gsapToAnimations, ...props }: TBlock) => {
 
         const blockTimeline = gsap.timeline();
 
+        //blockTimeline.to(blockRef.current, { xPercent: 100 });
+
         if (!gsapToAnimations) {
             blockTimeline.fromTo(
                 blockRef.current,
