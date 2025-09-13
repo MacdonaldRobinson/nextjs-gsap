@@ -84,17 +84,13 @@ export default function Home() {
         <div className="sectionsWrapper">
             <TopNav ref={topNavRef} />
             <Sections ref={sectionsRef} className="text-white">
-                <Section
-                    sectionKey="Home"
-                    topNavRef={topNavRef}
-                    pinSection={true}
-                >
+                <Section sectionKey="Home" topNavRef={topNavRef}>
                     <Background
                         type="video"
                         src="https://www.pexels.com/download/video/3141206/"
                     />
                     <SectionContent>
-                        <Step gsapToAnimations={[{}]}>
+                        <Step>
                             <Block>
                                 <PlaceHolderText />
                             </Block>
