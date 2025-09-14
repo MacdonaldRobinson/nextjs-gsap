@@ -26,9 +26,9 @@ const PostsPage = () => {
                     <button onClick={() => signIn("google")}>Login</button>
                 </div>
             )}
-            {session && selectedPost && (
+            {session && selectedPost && <RenderPost post={selectedPost} />}
+            {session && (
                 <>
-                    <RenderPost post={selectedPost} />
                     <div>
                         Posts
                         {posts &&
