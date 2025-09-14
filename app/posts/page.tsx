@@ -26,26 +26,24 @@ const PostsPage = () => {
                     <button onClick={() => signIn("google")}>Login</button>
                 </div>
             )}
-            {session && selectedPost && (
-                <>
-                    <RenderPost post={selectedPost} />
-                    <div>
-                        Posts
-                        {posts &&
-                            posts.map((post: TPost) => {
-                                return (
-                                    <div key={post.id}>
-                                        <a
-                                            className="cursor-pointer"
-                                            onClick={() => openModal(post)}
-                                        >
-                                            {post.title}
-                                        </a>
-                                    </div>
-                                );
-                            })}
-                    </div>
-                </>
+            {selectedPost && <RenderPost post={selectedPost} />}
+            {session && (
+                <div>
+                    Posts
+                    {posts &&
+                        posts.map((post: TPost) => {
+                            return (
+                                <div key={post.id}>
+                                    <a
+                                        className="cursor-pointer"
+                                        onClick={() => openModal(post)}
+                                    >
+                                        {post.title}
+                                    </a>
+                                </div>
+                            );
+                        })}
+                </div>
             )}
         </>
     );
