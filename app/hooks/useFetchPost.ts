@@ -7,7 +7,9 @@ const useFetchPosts = ()=>{
     const query = useQuery({
         queryKey: ["posts"],
         queryFn: async ()=>{
-            const {data} = await axios.get("/api/posts")
+            const {data} = await axios.get("/api/posts", {
+                withCredentials: true
+            })
             return data as TPost[];
         }
     })
