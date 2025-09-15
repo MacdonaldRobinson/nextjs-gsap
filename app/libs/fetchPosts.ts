@@ -1,19 +1,22 @@
-import axios from "axios"
+import axios from "axios";
 
-export type TPost  = {
+export type TPost = {
     userId: number;
-    id:     number;
-    title:  string;
-    body:   string;
-}
+    id: number;
+    title: string;
+    body: string;
+};
 
-export const fetchPosts = async ()=>{
-    const query = await axios.get<TPost[]>("https://jsonplaceholder.typicode.com/posts?_limit=5")
+export const fetchPosts = async () => {
+    const query = await axios.get<TPost[]>(
+        "https://jsonplaceholder.typicode.com/posts?_limit=5"
+    );
     return query;
-}
+};
 
-export const fetchPost = async (postId:number)=>{
-    const query = await axios.get<TPost>(`https://jsonplaceholder.typicode.com/posts/${postId}`)
+export const fetchPost = async (postId: number) => {
+    const query = await axios.get<TPost>(
+        `https://jsonplaceholder.typicode.com/posts/${postId}`
+    );
     return query;
-}
-
+};

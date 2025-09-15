@@ -1,22 +1,26 @@
 "use client";
 import { TPost } from "@/app/libs/fetchPosts";
 import useFetchPosts from "../hooks/useFetchPost";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import RenderPost from "./shared/RenderPost";
 import { signIn, useSession } from "next-auth/react";
+import useCreatePost from "../hooks/useCreatePost";
 
 const PostsPage = () => {
     const { data: session } = useSession();
 
     const [selectedPost, setSelectedPost] = useState<TPost>();
-    const { isLoading, data: posts } = useFetchPosts();
+    const { data: posts } = useFetchPosts();
 
-    const router = useRouter();
+    const { mutateAsync } = useCreatePost();
 
     const openModal = (post: TPost) => {
         window.history.pushState({}, "", `/posts/${post.id}`);
         setSelectedPost(post);
+    };
+
+    const handleAddPostToDatabase = async (post: TPost) => {
+        await mutateAsync(post);
     };
 
     return (

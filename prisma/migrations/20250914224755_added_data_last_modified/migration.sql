@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "public"."Posts" ADD COLUMN     "dataLastModified" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
